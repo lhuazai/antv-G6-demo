@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "pink_botnet",
+      "dataType": "botnet",
+      "legendType": "僵尸网络家族",
+      "first_seen": "2020-06-06",
+      "last_seen": "2021-07-18"
+    },
+    {
+      "id": "CVE-2019-2528",
+      "dataType": "cve",
+      "legendType": "漏洞事件"
+    },
+    {
+      "id": "France",
+      "dataType": "country",
+      "legendType": "国家"
+    },
+    {
+      "id": "CVE-2021-5191",
+      "dataType": "cve",
+      "legendType": "漏洞事件"
+    },
+    {
+      "id": "dc09ee2ff472a54051ed99ba760604c6",
+      "name": "busybox",
+      "dataType": "file",
+      "legendType": "单文件",
+      "md5": "dc09ee2ff472a54051ed99ba760604c6"
+    },
+    {
+      "id": "China",
+      "dataType": "country",
+      "legendType": "国家"
+    },
+  ],
+  "edges": [
+    {
+      "source": "pink_botnet",
+      "target": "CVE-2019-2528",
+      "edgeType": "botnet_to_cve"
+    },
+    {
+      "source": "CVE-2021-5191",
+      "target": "dc09ee2ff472a54051ed99ba760604c6",
+      "edgeType": "cve_to_file"
+    }
+  ]
+}
