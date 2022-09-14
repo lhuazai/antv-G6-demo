@@ -26,18 +26,30 @@ const tooltip = new G6.Tooltip({
 const menu = new G6.Menu({
   offsetX: 6,
   offsetX: 10,
-  itemTypes: ['node'],
+  itemTypes: ['node', 'edge'],
   getContent(e, graph) {
+    // console.log('e===', e);
+    const type = e.item._cfg.type
     const outDiv = document.createElement('div');
     outDiv.style.width = '180px';
     outDiv.style.padding = '10px';
-    outDiv.innerHTML = `
-    <p>菜单</p>
-    <ul>
+    if (type === 'node') {
+      outDiv.innerHTML = `
+      <p>菜单</p>
+      <ul>
         <li style="line-height:26px" code="hideRelationNode">隐藏入度关联节点</li>
         <li style="line-height:26px" code="hideNode">隐藏节点</li>
         <li style="line-height:26px" code="deleteNode">删除节点</li>
       </ul>`
+    } else {
+      outDiv.innerHTML = `
+      <p>菜单</p>
+      <ul>
+        <li style="line-height:26px" code="hideEdge">隐藏边</li>
+        <li style="line-height:26px" code="deleteEdge">删除边</li>
+      </ul>`
+    }
+    
     return outDiv
   },
   handleMenuClick(target, item, graph) {
@@ -62,6 +74,10 @@ const menu = new G6.Menu({
       item.hide();
     } else if (code === 'deleteNode') {
       graph.removeItem(item);
+    } else if (code === 'deleteEdge') {
+      graph.removeItem(item);
+    } else if (code === 'hideEdge') {
+      graph.hideItem(item);
     }
   },
 });

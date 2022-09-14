@@ -61,6 +61,7 @@ export default (_that, graph) => {
   // graph.on('node:mouseleave', clearAllStats);
   graph.on('canvas:click', (ev) => {
     clearAllStats(graph)
+    // graph.render();
     // const self = this;
     // const graph = self.graph;
     // let t = new Date().getTime()

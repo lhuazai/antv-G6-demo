@@ -1,4 +1,5 @@
 import G6 from '@antv/g6';
+// 注册动画圆形节点
 G6.registerNode(
   'circle-animate',
   {
@@ -21,8 +22,8 @@ G6.registerNode(
   },
   'circle',
 );
+// 添加 点击边 行为模式
 G6.registerBehavior('click-add-edge', {
-  // Set the events and the corresponding responsing function for this behavior
   getEvents() {
     return {
       'node:click': 'onClick', // The event is canvas:click, the responsing function is onClick
@@ -63,13 +64,10 @@ G6.registerBehavior('click-add-edge', {
       self.addingEdge = true;
     }
   },
-  // The responsing function for mousemove defined in getEvents
   onMousemove(ev) {
     const self = this;
-    // The current position the mouse clicks
     const point = { x: ev.x, y: ev.y };
     if (self.addingEdge && self.edge) {
-      // Update the end node to the current node the mouse clicks
       self.graph.updateItem(self.edge, {
         target: point,
       });
@@ -86,6 +84,7 @@ G6.registerBehavior('click-add-edge', {
     }
   },
 });
+// 注册iconfont 节点
 G6.registerNode('iconfont', {
   draw(cfg, group) {
     const { backgroundConfig: backgroundStyle, style, labelCfg: labelStyle } = cfg;
@@ -116,8 +115,8 @@ G6.registerNode('iconfont', {
       // must be assigned in G6 3.3 and later versions. it can be any value you want
       name: 'text-shape1',
     });
-    const labelY = backgroundStyle ? cfg.size * 2 : cfg.size;
-
+    // const labelY = backgroundStyle ? cfg.size * 2 : cfg.size;
+    const labelY = 20;
     group.addShape('text', {
       attrs: {
         x: 0,

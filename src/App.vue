@@ -128,6 +128,8 @@ export default {
       model: 'default',
       nodeRank: {},
       nodeDegree: {},
+      allNodeType: {}, // 所有节点属性
+      allEdgeType: {}, // 所有节点属性
       timeBarData: []
     }
   },
@@ -225,7 +227,7 @@ export default {
           },
           // click 状态为 true 时的样式
           click: {
-            stroke: '#000',
+            stroke: 'red',
             lineWidth: 3,
           },
         },
@@ -241,28 +243,29 @@ export default {
             lineWidth: 15,
           },
         },
-        linkCenter: true,
+        fitCenter: true,
         // 布局
         layout: {
           type: 'force',
-          linkDistance: 60,
+          linkDistance: 100,
           preventOverlap: true,
           nodeStrength: -20,
           edgeStrength: 0.1,
-          collideStrength: 1,
+          collideStrength: 0.8
           // onTick
         },
         animate: true,
-        animateCfg: {
-          duration: 2000,
-          easing: 'linearEasing',
-          repeat: true
-        },
+        autoPaint: true,
+        // animateCfg: {
+        //   duration: 2000,
+        //   easing: 'linearEasing',
+        //   repeat: true
+        // },
         plugins: [toolbar, grid, menu],
         // plugins: [timebar],
         // 内置交互
         modes: {
-          default: ['drag-canvas', 'zoom-canvas', 'drag-node', "click-select"],
+          default: ['drag-canvas', 'zoom-canvas', 'drag-node', 'click-select'],
           addEdge: ["click-add-edge", "click-select"]
           // addNode: ['click-add-node', 'click-select'],
           // dragLasso: [
@@ -301,38 +304,42 @@ export default {
         }
         // node.date = `2022${index}`
         // node.value = Math.round(Math.random() * 300)
+        for (const key in node.data) {
+          if (Object.hasOwnProperty.call(node.data, key)) {
+            this.allNodeType[key] = key
+          }
+        }
         let dataType = node.data.dataType;
         node.comboId =  dataType
         if (!this.nodeTypes.includes(dataType)) {
           this.nodeTypes.push(dataType)
           combos.push({id: dataType})
         }
-        if (node.data.dataType === 'country') {
-          node.backgroundConfig = {
-            fill: '#00FF00'
-          }
-        }
         node.style.lineWidth = 1;
         node.style.stroke = '#000080';
         node.style.fill = '#87CEFA';
         // node.label = node.data.id
-        
         if (dataType === 'file') {
+          // 文件
+          node.style.fill = '#82E6C7';
           node.type = 'circle-animate';
           node.size = 30;
-
         } else if (dataType === 'country') {
           node.type = 'iconfont';
-          node.color = '#40a9ff';
           node.text = '\ue785';
           node.style.fill = '#40a9ff';
-          node.size = 20;
-          node.label = node.data.id
+          node.size = 30;
+          node.label = node.data.id;
+          node.backgroundConfig = {
+            fill: '#00FF00'
+          }
         } else if (dataType === 'firmware') {
+          node.style.fill = '#622CD8';
           node.type = 'ellipse';
           node.size = [50, 20];
         } else if (dataType === 'manu') {
           node.type = 'rect';
+          node.style.fill = '#795AE1';
           node.size = [70, 20];
           node.label = node.data.id
         } else if (dataType === 'cve') {
@@ -342,20 +349,29 @@ export default {
           node.style.fill = '#1E90FF';
           node.label = node.id
         } else if (dataType === 'asset') {
-          node.style.fill = '#66CDAA';
+          node.style.fill = '#F69F7F';
+        } else if (dataType === 'botnet') {
+          node.style.fill = '#F69F7F';
         }
       });
-
+      console.log('this.allNodeType', this.allNodeType);
       edges.forEach((edge) => {
         if (!edge.style) {
           edge.style = {
             endArrow: {
-              path: 'M 0,0 L 8,4 L 8,-4 Z',
-              fill: '#e2e2e2',
+              path: G6.Arrow.triangle(10, 15, 0),
+              fill: '#32CD32'
             },
           };
         }
+        
+        for (const key in edge.data) {
+          if (Object.hasOwnProperty.call(edge.data, key)) {
+            this.allEdgeType[key] = key
+          }
+        }
         if (!this.edgeTypes.includes(edge.data.edgeType)) {
+          // 统计边类型
           this.edgeTypes.push(edge.data.edgeType)
         }
         edge.style.lineWidth = edge.weight || 2;
@@ -383,6 +399,7 @@ export default {
           }
         }
       });
+      console.log('this.allEdgeType', this.allEdgeType);
       // 节点间 多条边
       const offsetDiff = 10;
       const multiEdgeType = 'quadratic';
@@ -390,7 +407,7 @@ export default {
       const loopEdgeType = 'loop';
       G6.Util.processParallelEdges(remoteData.edges, offsetDiff, multiEdgeType, singleEdgeType, loopEdgeType);
 
-      console.log('remoteData', remoteData);
+      // console.log('remoteData', remoteData);
       // remoteData.combos = combos;
       graph.data(remoteData);
       graph.render();
